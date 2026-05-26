@@ -133,3 +133,142 @@ SELECT * FROM book
 
 SELECT * FROM publisher
 """
+# зАНЯТИЕ 26.05.26 СВЯЗИ ОДИН КО МНОГИМ
+REFERENCES - команда для свзяывания с другой таблицей серез
+fk_publisher_id integer REFERENCES publisher(publisher_id)
+
+ERD _ посмотреть взаимосязи таблицы
+
+-- CREATE TABLE book
+-- (
+-- 	book_id integer PRIMARY KEY,
+-- 	title text NOT NULL,
+-- 	isbn varchar(32) NOT NULL,
+-- 	fk_publisher_id integer REFERENCES publisher(publisher_id) NOT NULL
+-- )
+
+INSERT INTO book
+VALUES
+(1, 'Гномы', '475827506503', 1),
+(2, 'Томы', '475827506502', 1),
+(3, 'Ладно', '475827506505', 2),
+(4, 'Потом', '475827506507', 3),
+(5, 'Здесь', '475827506509', 4)
+
+
+# второй вариант без удаления таблицы - добавляем колнку и потом взимосвязи
+ALTER TABLE book
+ADD COLUMN fk_publisher_id;
+
+ALTER TABLE book
+ADD CONSTRANT fk_book_publisher
+FOREIGN KEY(fk_publisher_id ) REFERENCES publisher(publisher_id)
+
+FOREIGN KEY - внешний ключ
+
+# ОДИН К ОДНОМУ - (У ОДНОГО ЧЕЛОВЕКА ОДИН ПАСПОРТ)
+CREATE TABLE person(
+	person_id int PRIMARY KEY,
+	first_name varchar(64) NOT NULL,
+	last_name varchar(64) NOT NULL
+);
+
+CREATE TABLE passport(
+	passport_id int PRIMARY KEY,
+	serial_number int NOT NULL,
+	registration text NOT NULL,
+	fk_passport_person int UNIQUE REFERENCES person(person_id)
+)
+
+пакетная ставка - это множественная ставка строк в таблицу
+-- INSERT INTO person(person_id, first_name, last_name)
+-- VALUES
+-- (1, 'Vasia', 'Snow'),
+-- (2, 'Ned', 'Stark'),
+-- (3, 'Rob', 'Bob'),
+-- (4, 'Dag', 'Week')
+
+SELECT * FROM person
+
+-- INSERT INTO passport(passport_id, serial_number, registration, fk_passport_person)
+-- VALUES
+-- (1, 123456, 'Winterfell', 1),
+-- (2, 123457, 'Summerfell', 2),
+-- (3, 123458, 'Springfell', 3),
+-- (4, 123459, 'Autumnfell', 4)
+
+-- SELECT * FROM passport
+
+# МНОГИЕ КО МНОГИМ
+
+удалить содержимое таблиуцы book (строчки) TRUNCATE book ИЛИ DELETE FROM book
+Далее
+INSERT INTO book
+VALUES
+(1, 'Book for Dumnies', '123456', 1),
+(2, 'Book for Smart Gyes', '789456', 1),
+(3, 'Book for Happy People', '123456', 2),
+(4, 'Book for Dumnies', '123456', 2);
+
+CREATE TABLE author
+(
+	autor_id int PRIMARY KEY,
+	full_name text NOT NULL,
+	rating real
+);
+
+INSERT INTO author
+VALUES
+(1, 'Bob', 4.5),
+(2, 'Alice', 4.0),
+(3, 'Bob', 4.7)
+
+Делаем результирующую таблицу
+
+CREATE TABLE book_author
+(
+	book_id int REFERENCES book (book_id),
+	author_id int REFERENCES author (author_id),
+
+	CONSTRAINT book_author_pkey PRIMARY KEY (book_id, author_id)
+);
+
+INSERT INTO book_author
+VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(3, 2),
+(4, 1),
+(4, 2),
+(4, 3)
+
+
+""""
+Задания
+
+CREATE TABLE employees(
+	id int PRIMARY KEY,
+	full_name text NOT NULL
+	)
+
+CREATE TABLE employee_profiles
+	(
+	id int PRIMARY KEY,
+	employee_id int NOT NULL,
+	position text NOT NULL,
+	salary int NOT NULL
+	)
+	
+INSERT INTO employees
+VALUES
+(1, 'Иванов Петр'),
+(2, 'Силанова Анастасия'),
+(3, 'Бузухов Константин')
+
+INSERT INTO employee_profiles
+VALUES
+(1, 345, 'работник', 10000),
+(2, 344, 'работник', 10000),
+(3, 343, 'работник', 10000)
+"""
