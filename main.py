@@ -133,6 +133,8 @@ SELECT * FROM book
 
 SELECT * FROM publisher
 """
+from pydantic_core.core_schema import custom_error_schema
+
 # зАНЯТИЕ 26.05.26 СВЯЗИ ОДИН КО МНОГИМ
 REFERENCES - команда для свзяывания с другой таблицей серез
 fk_publisher_id integer REFERENCES publisher(publisher_id)
@@ -417,3 +419,180 @@ ORDER BY  required_date DESC, shipped_date ASC
 
 SELECT MIN(unit_price) FROM products
 WHERE units_in_stock > 30
+
+"""
+оПЕРАТОР LIKE
+"""
+
+SELECT last_name, first_name
+FROM employees
+WHERE first_name LIKE '%n'
+
+SELECT last_name, first_name
+FROM employees
+WHERE first_name LIKE 'B%'
+
+SELECT first_name, last_name
+FROM employees
+WHERE last_name LIKE 'B%'
+
+SELECT first_name, last_name
+FROM employees
+WHERE last_name LIKE '_uch%'
+
+SELECT first_name, last_name
+FROM employees
+WHERE last_name LIKE '%uch%'
+
+ЛИМИТЫ
+SELECT product_name, unit_price
+FROM products
+WHERE discontinued <> 1
+ORDER BY unit_price DESC
+LIMIT 10
+
+Выбрать все записи заказвоа (orders)
+в которых наименование страны отгрузки (ship_country) начинается с "U"
+SELECT * FROM orders
+WHERE ship_country LIKE 'U%'
+
+Фраза "все записи" это *
+
+SELECT ship_country, ship_region, ship_country
+FROM orders
+WHERE ship_region IS NULL
+
+
+
+GROUP BY
+SELECT ship_country, ship_region, ship_country
+FROM orders
+WHERE ship_region IS NOT NULL
+
+SELECT ship_country, COUNT(*)
+FROM orders
+WHERE freight > 50
+GROUP BY ship_country
+ORDER BY COUNT(*) DESC
+
+
+SELECT category_id, SUM(units_in_stock)
+FROM products
+GROUP BY category_id
+ORDER BY SUM(units_in_stock) DESC
+LIMIT 5
+
+
+convertor xlsx to sqlсоздать через дипсик
+
+
+HAVING имеющий улсовия
+
+SELECT category_id, SUM(unit_price * units_in_stock)
+FROM products
+WHERE discontinued <> 1
+GROUP BY category_id
+HAVING SUM(unit_price * units_in_stock) > 5000
+ORDER BY SUM(unit_price * units_in_stock) DESC
+
+SELECT country
+FROM customers
+UNION
+SElECT country
+FROM employees
+
+SELECT country
+FROM customers
+UNION ALL
+SElECT country
+FROM employees
+
+
+SELECT DISTINCT country
+FROM customers
+UNION ALL
+SElECT DISTINCT country
+FROM employees
+
+SELECT country
+FROM customers
+INTERSECT
+SElECT country
+FROM suppliers
+
+SELECT country
+FROM customers
+EXCEPT
+SElECT country
+FROM suppliers
+
+SELECT country
+FROM customers
+EXCEPT All
+SElECT country
+FROM suppliers
+
+Главные операторы работы с данными (DQL / DML)
+SELECT: Извлекает строки из одной или нескольких таблиц базы данных.
+INSERT: Добавляет новые записи в существующую таблицу.
+UPDATE: Изменяет уже существующие данные внутри таблицы.
+DELETE: Удаляет определенные записи или все строки из таблицы.
+
+Операторы структуры запроса (Ключевые слова)
+FROM: Указывает таблицу-источник, из которой будут извлекаться данные.
+WHERE: Фильтрует строки по заданному пользователем условию.
+JOIN: Объединяет данные из разных таблиц на основе общего поля.
+GROUP BY: Группирует строки, имеющие одинаковые значения в столбцах.
+HAVING: Фильтрует уже сгруппированные оператором GROUP BY данные.
+ORDER BY: Сортирует итоговый результат по возрастанию или убыванию.
+
+Популярные условные и логические операторы
+AND / OR / NOT: Логические операторы «И», «ИЛИ», «НЕ» для комбинирования условий.
+IN: Проверяет, совпадает ли значение поля с элементами из заданного списка.
+BETWEEN: Фильтрует данные, проверяя их попадание в указанный диапазон.
+LIKE: Ищет текстовые совпадения по заданному текстовому шаблону.
+IS NULL: Проверяет ячейки таблицы на отсутствие в них каких-либо значений
+
+Основные агрегатные функции
+COUNT: Подсчитывает общее количество строк в выборке.
+SUM: Вычисляет сумму всех числовых значений в столбце.
+AVG: Находит среднее арифметическое значение числового столбца.
+MIN / MAX: Находят минимальное и максимальное значение в столбце.
+
+SELECT order_id, customer_id, freight, ship_country FROM orders
+WHERE ship_country LIKE 'N%'
+ORDER BY freight DESC
+LIMIT 10
+
+
+SELECT first_name, last_name, home_phone FROM employees
+WHERE region IS NULL
+
+SELECT COUNT(*) FROM customers
+WHERE region IS NOT NULL
+
+SELECT COUNT(*) FROM customers
+WHERE region IS NOT NULL
+
+SELECT country, COUNT(*) FROM suppliers
+GROUP BY country
+ORDER BY COUNT(*) DESC
+
+SELECT SUM(freight) FROM orders
+WHERE ship_region IS NOT NULL
+GROUP BY ship_country
+HAVING SUM(freight) > 2750
+ORDER BY SUM(freight) DESC
+
+-- SELECT SUM(freight) FROM orders
+-- WHERE ship_region IS NOT NULL
+-- GROUP BY ship_country
+-- HAVING SUM(freight) > 2750
+-- ORDER BY SUM(freight) DESC
+
+SELECT DISTINCT country
+FROM customers
+UNION
+SElECT DISTINCT country
+FROM suppliers
+ORDER BY country ASC
