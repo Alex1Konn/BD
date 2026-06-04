@@ -133,6 +133,8 @@ SELECT * FROM book
 
 SELECT * FROM publisher
 """
+from tkinter.constants import RIGHT
+
 from pydantic_core.core_schema import custom_error_schema
 
 # зАНЯТИЕ 26.05.26 СВЯЗИ ОДИН КО МНОГИМ
@@ -596,3 +598,62 @@ UNION
 SElECT DISTINCT country
 FROM suppliers
 ORDER BY country ASC
+
+Джойны JOINS -оператор для вывода данных их 2х и более таблиц по определенным правилам.
+По каким правилам забираем данные определяется типом джойна
+
+SELECT fieldsA, fieldsB
+FROM table1 JOIN table2
+ON field1, field2
+
+Виды:
+INNER JOIN
+LEFT JOIN
+RIGHT JOIN
+FULL JOIN (OUTER JOIN)
+
+SELECT product_name, suppliers.company_name, units_in_stock
+FROM products
+INNER JOIN suppliers ON suppliers.supplier_id = products.supplier_id
+ORDER BY units_in_stock DESC
+
+SELECT product_name, suppliers.company_name, units_in_stock
+FROM products
+INNER JOIN suppliers ON suppliers.supplier_id = products.supplier_id
+ORDER BY units_in_stock DESC
+
+SELECT category_name, SUM(units_in_stock)
+FROM products
+INNER JOIN categories ON products.category_id = categories.category_id
+GROUP BY category_name
+ORDER BY SUM(units_in_stock) DESC
+LIMIT 5
+
+SELECT category_name, SUM(units_price * units_in_stock)
+FROM products
+INNER JOIN categories ON products.category_id = categories.category_id
+WHERE discontinued <> 1
+GROUP BY category_name
+HAVING SUM(units_price * units_in_stock) > 5000
+ORDER BY SUM(units_price * units_in_stock) DESC
+
+
+SELECT order_id, customer_id, first_name, last_name, title
+FROM orders
+INNER JOIN employees ON orders.employee_id = empoloyee_id.empoloyes_id
+
+SELECT order_date, product_name, ship_country, products.unit_price, quantity, discount
+FROM orders
+INNER JOIN order_details ON orders.order_id = order_details.order_id
+INNER JOIN products ON order_details.product_id = products.product_id
+
+SELECT contact_name, company_name, phone,
+	   first_name, last_name, title,
+	   order_date, product_name, ship_country, products.unit_price,
+	   quantity, diccount
+FROM orders
+JOIN order_details ON orders.order_id = order_details.order_id
+JOIN products ON order_details,product_id = products.product_id
+JOIN customers ON orders.customer_id = customers.customer_id
+JOIN employees ON employees.employee_id = orders.employee_id
+WHERE ship_country = 'USA'
