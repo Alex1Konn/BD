@@ -657,3 +657,71 @@ JOIN products ON order_details,product_id = products.product_id
 JOIN customers ON orders.customer_id = customers.customer_id
 JOIN employees ON employees.employee_id = orders.employee_id
 WHERE ship_country = 'USA'
+
+SELECT company_name, product_name
+FROM suppliers
+LEFT JOIN products ON suppliers.supplier_id = products.supplier_id
+
+
+SELECT company_name, order_id
+FROM customers
+LEFT JOIN orders ON orders.customer_id = customers.customer_id
+WHERE order_id IS NULL
+
+SELECT last_name, order_id
+FROM employees
+LEFT JOIN orders ON orders.employee_id = employees.employee_id
+WHERE order_id IS NULL
+
+
+SELECT last_name, order_id
+FROM employees
+RIGHT JOIN orders ON orders.employee_id = employees.employee_id
+WHERE order_id IS NULL
+
+-- SELECT  customers.company_name, employees.first_name, employees.last_name, shippers.company_name, customers.city
+-- FROM orders
+-- JOIN employees ON orders.order_id = employees.employee_id
+-- JOIN customers ON orders.customer_id = customers.customer_id
+-- JOIN shippers ON shippers.shipper_id = orders.order_id
+
+-- WHERE customers.city = 'London' AND shippers.company_name
+
+-- SELECT company_name FROM  shippers
+
+SELECT city FROM  customers
+
+SELECT  contact_name, phone, product_name, units_in_stock
+FROM products
+JOIN suppliers ON suppliers.supplier_id = products.supplier_id
+JOIN categories ON categories.category_id = products.category_id
+WHERE products.discontinued=1 AND category_name IN ('Beverages', 'Seafood') AND products.units_in_stock < 20
+
+
+задание одно двумя способами написания
+
+-- SELECT  contact_name, phone, product_name, units_in_stock
+-- FROM products
+-- JOIN suppliers ON suppliers.supplier_id = products.supplier_id
+-- JOIN categories ON categories.category_id = products.category_id
+-- WHERE products.discontinued=0 AND category_name IN ('Beverages', 'Seafood') AND products.units_in_stock < 20
+
+SELECT  contact_name, phone, product_name, units_in_stock
+FROM products
+JOIN categories USING(category_id)
+JOIN suppliers USING(supplier_id)
+WHERE category_name IN ('Beverages', 'Seafood')
+AND discontinued=0
+AND units_in_stock < 20
+
+SELECT contact_name, order_id
+FROM customers
+LEFT JOIN orders USING(customer_id)
+WHERE order_id IS NULL
+ORDER BY contact_name ASC
+
+SELECT DISTINCT contact_name, order_id
+FROM customers
+LEFT JOIN orders USING(customer_id)
+WHERE order_id IS NULL
+ORDER BY contact_name
